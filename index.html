@@ -3,6 +3,7 @@
 <meta charset="UTF-8">
 <title>25깅융서버 좌표탐색기</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 <style>
 body { font-family: sans-serif; padding:20px; }
 textarea { width:100%; height:120px; }
@@ -100,11 +101,30 @@ function createChart(datasets,xMin,xMax,yMin,yMax){
     data:{datasets},
     options:{
       plugins:{
-        legend:{
-          display:document.getElementById('toggleLegend').checked,
-          position:'bottom'
-        }
+  legend:{
+    display:document.getElementById('toggleLegend').checked,
+    position:'bottom'
+  },
+
+  zoom:{
+    pan:{
+      enabled:true,
+      mode:'xy'
+    },
+
+    zoom:{
+      wheel:{
+        enabled:true
       },
+
+      pinch:{
+        enabled:true
+      },
+
+      mode:'xy'
+    }
+  }
+},
       scales:{
         x:{min:xMin,max:xMax},
         y:{min:yMin,max:yMax}
@@ -165,7 +185,7 @@ function render(){
     });
 
     const d=Math.sqrt(minDist);
-    const pad=Math.max(5,d*3);
+    const pad=Math.max(80,d*10);
 
     const datasets=[
       ...buildDatasets(pts),
@@ -275,11 +295,11 @@ window.addEventListener('DOMContentLoaded', () => {
 8,-2095,정글,green,circle
 10,-1643,정글,green,circle
 192,-387,진달래,blue,circle
-169,-1509,창백한정원,blue,circle
+169,-1509,창백한정원,blue,x
 132,-491,타이가RP,red,x
 185,-433,소나무원시타이가,green,circle
 1891,99,시련의회당(y-18),red,circle
-1927,23,폐광(y+6>,purple,x
+1927,23,폐광(y+6),purple,x
 1970,68,폐광,purple,x
 1600,-150,나나오두막,black,rect
 362,-993,자작나무RP,red,x
@@ -305,8 +325,8 @@ window.addEventListener('DOMContentLoaded', () => {
 2061,-1187,마녀오두막,red,circle
 2016,36,자작나무RP,red,circle
 934,-91,라마,blue,circle
-29,-285,동굴,purple,circle
--581,-338,무너진협곡,purple,circle
+29,-285,동굴,purple,x
+-581,-338,무너진협곡,purple,x
 -760,-1192,폐광(y-20),purple,x
 -12,-421,소나무원시타이가,green,circle
 -796,-1237,워든(y-29),blue,circle
@@ -344,14 +364,14 @@ window.addEventListener('DOMContentLoaded', () => {
 2054,914,평원RP,red,circle
 2000,270,난파선,red,circle
 1736,19,무너진협곡,purple,circle
-423,-693,동굴,purple,circle
+423,-693,동굴,purple,x
 -1915,-155,정글,green,circle
 -2317,-524,침식된악지,green,circle
 -2299,-535,폐광RP,red,x
 -1772,-359,협곡,purple,circle
 -1578,-442,평원마을,gold,x
 -793,-312,자작나무숲,green,circle
-162,-797,무성한동굴(y-16),blue,circle
+162,-797,무성한동굴(y-16),blue,x
 2025,-1572,엔드포탈,black,star
 2414,-1868,해변마을,gold,x
 2206,-1672,바다RP,red,x
@@ -429,7 +449,7 @@ window.addEventListener('DOMContentLoaded', () => {
 -3021,-211,평원,green,circle
 -2910,-281,평원RP,red,circle
 -2916,-492,악지마을,gold,x
--304,-1976,네더포탈,black,circle
+-310,-1987,정글포탈(피글린요새포탈),black,circle
 -528,-2900,대나무,green,circle
 -612,-3031,정글강,green,circle
 -630,-3040,정글동굴,purple,x
@@ -536,6 +556,60 @@ window.addEventListener('DOMContentLoaded', () => {
 -2324,2034,창백한정원,blue,circle
 -2630,1619,창백한정원,blue,circle
 -3094,1423,눈덮인비탈,green,circle
+2122,-1543,엔더포탈지상거처(y+80),black,rect
+17,1061,푸른얼음광산,black,triangle
+2099,-1806,마녀오두막,red,circle
+2613,-2059,해저폐허,red,circle
+3196,-2035,바람이세찬언덕,green,circle
+3448,-2034,바람이세찬사바나,green,circle
+3621,-2000,마녀오두막,red,circle
+3044,-1842,미니평원,green,circle
+2610,-1805,마녀오두막,red,circle
+2434,-1908,바닷가늪마을,gold,x
+2200,-1662,난파선,red,circle
+2684,-1630,늪RP,red,circle
+3267,-1660,늪RP,red,circle
+4040,-1723,마녀오두막,red,circle
+3905,-1452,마녀오두막,red,circle
+3025,-1491,중앙평원,green,circle
+2678,-1475,진달래,blue,circle
+2441,-1493,숲섬,green,circle
+2244,-1289,바다RP,red,circle
+2797,-1318,싱크홀동굴(북북서방향),purple,circle
+3155,-1290,마녀오두막,red,circle
+3473,-1276,강RP,red,circle
+3630,-1301,공중돌섬,green,circle
+3650,-1301,동굴,purple,circle
+3607,-1301,바람이세찬언덕,green,circle
+3708,-1315,바람이세찬숲,green,circle
+3938,-1165,크레이터동굴(남동방향),purple,circle
+2212,-943,바람이세찬사바나,green,circle
+2365,-867,바람이세찬언덕마을,gold,x
+2658,-1000,사바나테이블산,green,circle
+2794,-757,무너진평지동굴,purple,circle
+2222,-759,산산이조각난사바나,green,circle
+2603,-559,평원강RP,red,x
+2652,-575,해바라기평원,green,circle
+2803,-574,해바라기평원,green,circle
+3097,-572,꽃숲,blue,circle
+3842,-570,난파선,red,circle
+3454,-345,숲RP,red,circle
+2265,-370,폐광(북쪽방향),purple,circle
+2473,-242,강가마을,gold,x
+2680,-206,섭입형경계동굴(북쪽방향),purple,circle
+2874,-205,역대급레전드심층암까지떨어지는동굴,purple,x
+3114,-168,벚꽃,green,circle
+3794,-110,벚꽃언덕,green,circle
+3943,0,평원마을,gold,x
+3422,73,핑크양마을,gold,x
+3167,-116,벚꽃,green,circle
+2616,-265,벚나무없는벚꽃평원,green,circle
+3545,2069,큰마을포탈,black,circle
+-3710,-2179,맹그로브포탈,green,circle
+-2160,-911,악지동굴,purple,circle
+-2328,-949,악지RP,red,x
+2818,-179,역대급~~~동굴앞포탈,black,circle
+2969,-97,폐광[y+29],purple,x
 </textarea>
 </div></body>
 </html>
