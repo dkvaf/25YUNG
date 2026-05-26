@@ -2,14 +2,22 @@
 <head>
 <meta charset="UTF-8">
 <title>25깅융서버 좌표탐색기</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
-<style>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1"></script><style>
 body { font-family: sans-serif; padding:20px; }
 textarea { width:100%; height:120px; }
 input { margin:4px; }
-canvas { max-width:900px; }
+#chartContainer{
+  width:100%;
+  max-width:1200px;
+  aspect-ratio:2 / 1;
+}
+
+canvas{
+  width:100% !important;
+  height:100% !important;
+}
 .section { margin-bottom:16px; }
 </style>
 </head>
@@ -45,7 +53,9 @@ canvas { max-width:900px; }
 <label><input type="checkbox" id="toggleLabels" checked onchange="render()"> 라벨 표시</label>
 <label><input type="checkbox" id="toggleLegend" onchange="render()"> 범례 표시</label>
 </div><p id="result"></p>
-<canvas id="chart"></canvas><script>
+<div id="chartContainer">
+  <canvas id="chart"></canvas>
+</div><script>
 let chart;
 let mode = 'all';
 let searchCoord = null;
@@ -94,14 +104,55 @@ const labelPlugin={
   }
 };
 
+const bgImage = new Image();
+bgImage.src = "map.png";   // PNG 파일명
+
+const backgroundPlugin = {
+  id: 'backgroundImage',
+  beforeDraw(chart) {
+    if (!bgImage.complete) return;
+
+    const {ctx, scales:{x,y}} = chart;
+
+    // 지도 범위
+    const mapX1 = -4160;
+    const mapX2 = 4032;
+    const mapY1 = 1984;
+    const mapY2 = -2112;
+
+    const left = x.getPixelForValue(mapX1);
+    const right = x.getPixelForValue(mapX2);
+
+    // Z축 반전 (마크 북쪽 맞춤)
+    const top = y.getPixelForValue(mapY1);
+    const bottom = y.getPixelForValue(mapY2);
+
+    ctx.save();
+
+ctx.globalAlpha = 0.45;
+
+ctx.drawImage(
+  bgImage,
+  left,
+  top,
+  right-left,
+  bottom-top
+);
+
+ctx.restore();
+  }
+};
+
 function createChart(datasets,xMin,xMax,yMin,yMax){
   if(chart) chart.destroy();
 
   chart=new Chart(document.getElementById('chart'),{
     type:'scatter',
     data:{datasets},
-    options:{
-      plugins:{
+options:{
+  maintainAspectRatio:false,
+
+  plugins:{
   legend:{
     display:document.getElementById('toggleLegend').checked,
     position:'bottom'
@@ -110,7 +161,8 @@ function createChart(datasets,xMin,xMax,yMin,yMax){
   zoom:{
     pan:{
       enabled:true,
-      mode:'xy'
+      mode:'xy',
+      threshold:10
     },
 
     zoom:{
@@ -131,7 +183,7 @@ function createChart(datasets,xMin,xMax,yMin,yMax){
         y:{min:yMin,max:yMax}
       }
     },
-    plugins:[labelPlugin]
+    plugins:[backgroundPlugin,labelPlugin]
   });
 }
 
